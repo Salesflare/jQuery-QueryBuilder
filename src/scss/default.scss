@@ -5,14 +5,18 @@ $item-vertical-spacing: 4px !default;
 $item-border-radius: 5px !default;
 
 // groups
-$group-background-color: rgba(250, 240, 210, .5) !default;
-$group-border-color: #DCC896 !default;
+// $group-background-color: rgba(250, 240, 210, .5) !default;
+$group-background-color: #f1f2f6 !default;
+// $group-border-color: #DCC896 !default;
+$group-border-color: #cad3df !default;
 $group-border: 1px solid $group-border-color !default;
 $group-padding: 10px !default;
 
 // rules
-$rule-background-color: rgba(255, 255, 255, .9) !default;
-$rule-border-color: #EEE !default;
+// $rule-background-color: rgba(255, 255, 255, .9) !default;
+$rule-background-color: #fff !default;
+// $rule-border-color: #EEE !default;
+$rule-border-color: #cad3df !default;
 $rule-border: 1px solid $rule-border-color !default;
 $rule-padding: 5px !default;
 // scss-lint:disable ColorVariable
@@ -53,8 +57,12 @@ $ticks-position: 5px, 10px !default;
 
     padding: $group-padding;
     padding-bottom: #{$group-padding - $item-vertical-spacing};
-    border: $group-border;
+    border: 0;
     background: $group-background-color;
+
+    .btn.btn-xs {
+      background-color: rgb(255, 255, 255);
+    }
   }
 
   .rules-group-header {
@@ -82,7 +90,7 @@ $ticks-position: 5px, 10px !default;
 
   .rules-list {
     list-style: none;
-    padding: 0 0 0 #{nth($ticks-position, 1) + nth($ticks-position, 2)};
+    padding: 0 0 0 0;
     margin: 0;
   }
 
@@ -94,9 +102,15 @@ $ticks-position: 5px, 10px !default;
     .rule-operator-container,
     .rule-value-container {
       @extend %rule-component;
+      margin: 9px 0 9px 0;
+      min-width: 90px;
+
+      md-select {
+        width: 100%;
+      }
     }
   }
-
+  
   .rule-value-container {
     border-left: $rule-value-separator;
     padding-left: 5px;
@@ -135,41 +149,41 @@ $ticks-position: 5px, 10px !default;
   }
 
   // TICKS
-  .rules-list>* {
-    &::before,
-    &::after {
-      content: '';
-      position: absolute;
-      left: #{-1 * nth($ticks-position, 2)};
-      width: nth($ticks-position, 2);
-      height: calc(50% + #{$item-vertical-spacing});
-      border-color: $ticks-color;
-      border-style: solid;
-    }
+  // .rules-list>* {
+  //   &::before,
+  //   &::after {
+  //     content: '';
+  //     position: absolute;
+  //     left: #{-1 * nth($ticks-position, 2)};
+  //     width: nth($ticks-position, 2);
+  //     height: calc(50% + #{$item-vertical-spacing});
+  //     border-color: $ticks-color;
+  //     border-style: solid;
+  //   }
 
-    &::before {
-      top: #{-2 * $ticks-width};
-      border-width: 0 0 $ticks-width $ticks-width;
-    }
+  //   &::before {
+  //     top: #{-2 * $ticks-width};
+  //     border-width: 0 0 $ticks-width $ticks-width;
+  //   }
 
-    &::after {
-      top: 50%;
-      border-width: 0 0 0 $ticks-width;
-    }
+  //   &::after {
+  //     top: 50%;
+  //     border-width: 0 0 0 $ticks-width;
+  //   }
 
-    &:first-child::before {
-      top: #{-$group-padding - $ticks-width};
-      height: calc(50% + #{$group-padding + $item-vertical-spacing});
-    }
+  //   &:first-child::before {
+  //     top: #{-$group-padding - $ticks-width};
+  //     height: calc(50% + #{$group-padding + $item-vertical-spacing});
+  //   }
 
-    &:last-child::before {
-      border-radius: 0 0 0 #{2 * $ticks-width};
-    }
+  //   &:last-child::before {
+  //     border-radius: 0 0 0 #{2 * $ticks-width};
+  //   }
 
-    &:last-child::after {
-      display: none;
-    }
-  }
+  //   &:last-child::after {
+  //     display: none;
+  //   }
+  // }
 }
 
 // import

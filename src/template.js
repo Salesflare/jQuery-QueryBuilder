@@ -1,43 +1,20 @@
 QueryBuilder.templates.group = '\
 <dl id="{{= it.group_id }}" class="rules-group-container"> \
-  <dt class="rules-group-header"> \
-    <div class="btn-group pull-right group-actions"> \
-      <button type="button" class="btn btn-xs btn-success" data-add="rule"> \
-        <i class="{{= it.icons.add_rule }}"></i> {{= it.translate("add_rule") }} \
-      </button> \
-      {{? it.settings.allow_groups===-1 || it.settings.allow_groups>=it.level }} \
-        <button type="button" class="btn btn-xs btn-success" data-add="group"> \
-          <i class="{{= it.icons.add_group }}"></i> {{= it.translate("add_group") }} \
-        </button> \
-      {{?}} \
-      {{? it.level>1 }} \
-        <button type="button" class="btn btn-xs btn-danger" data-delete="group"> \
-          <i class="{{= it.icons.remove_group }}"></i> {{= it.translate("delete_group") }} \
-        </button> \
-      {{?}} \
-    </div> \
-    <div class="btn-group group-conditions"> \
-      {{~ it.conditions: condition }} \
-        <label class="btn btn-xs btn-primary"> \
-          <input type="radio" name="{{= it.group_id }}_cond" value="{{= condition }}"> {{= it.translate("conditions", condition) }} \
-        </label> \
-      {{~}} \
-    </div> \
-    {{? it.settings.display_errors }} \
-      <div class="error-container"><i class="{{= it.icons.error }}"></i></div> \
-    {{?}} \
-  </dt> \
   <dd class=rules-group-body> \
     <ul class=rules-list></ul> \
   </dd> \
+  <button type="button" class="btn btn-xs" data-add="rule"> \
+    <i class="{{= it.icons.add_rule }}"></i> {{= it.translate("add_rule") }} \
+  </button> \
 </dl>';
 
 QueryBuilder.templates.rule = '\
 <li id="{{= it.rule_id }}" class="rule-container"> \
   <div class="rule-header"> \
     <div class="btn-group pull-right rule-actions"> \
-      <button type="button" class="btn btn-xs btn-danger" data-delete="rule"> \
-        <i class="{{= it.icons.remove_rule }}"></i> {{= it.translate("delete_rule") }} \
+      <button type="button" class="btn btn-xs" data-delete="rule"> \
+        <i class="{{= it.icons.remove_rule }}"></i> \
+        <!-- original content {{= it.translate("delete_rule") }} --> \
       </button> \
     </div> \
   </div> \
@@ -50,6 +27,28 @@ QueryBuilder.templates.rule = '\
 </li>';
 
 QueryBuilder.templates.filterSelect = '\
+{{ var optgroup = null; }} \
+<md-input-container name="{{= it.rule.id }}_filter">\
+    <md-select class="form-control" name="{{= it.rule.id }}_filter" ng-change="test(\'{{= it.rule.id }}_filter\')" ng-model="filterSelect_{{= it.rule.id }}" aria-label="{{= it.rule.id }}" placeholder="{{= it.settings.select_placeholder }}" flex> \
+        {{? it.settings.display_empty_filter }} \
+            <md-option value="-1">{{= it.settings.select_placeholder }}</md-option>\
+        {{?}}\
+        {{~ it.filters: filter }} \
+            {{? optgroup !== filter.optgroup }} \
+                {{? optgroup !== null }}\
+                    </optgroup>\
+                {{?}} \
+                {{? (optgroup = filter.optgroup) !== null }} \
+                    <optgroup label="{{= it.translate(it.settings.optgroups[optgroup]) }}"> \
+                {{?}} \
+            {{?}} \
+            <md-option value="{{=filter.label}}">{{= it.translate(filter.label) }}</md-option> \
+        {{~}} \
+        {{? optgroup !== null }}\
+            </optgroup>\
+        {{?}} \
+    </md-select>\
+</md-input-container>\
 {{ var optgroup = null; }} \
 <select class="form-control" name="{{= it.rule.id }}_filter"> \
   {{? it.settings.display_empty_filter }} \
@@ -66,26 +65,32 @@ QueryBuilder.templates.filterSelect = '\
   {{~}} \
   {{? optgroup !== null }}</optgroup>{{?}} \
 </select>';
+// ';
 
 QueryBuilder.templates.operatorSelect = '\
-{{? it.operators.length === 1 }} \
-<span> \
-{{= it.translate("operators", it.operators[0].type) }} \
-</span> \
-{{?}} \
-{{ var optgroup = null; }} \
-<select class="form-control {{? it.operators.length === 1 }}hide{{?}}" name="{{= it.rule.id }}_operator"> \
-  {{~ it.operators: operator }} \
-    {{? optgroup !== operator.optgroup }} \
-      {{? optgroup !== null }}</optgroup>{{?}} \
-      {{? (optgroup = operator.optgroup) !== null }} \
-        <optgroup label="{{= it.translate(it.settings.optgroups[optgroup]) }}"> \
-      {{?}} \
+<md-input-container>\
+    {{? it.operators.length === 1 }} \
+        <span> \
+            {{= it.translate("operators", it.operators[0].type) }} \
+        </span> \
     {{?}} \
-    <option value="{{= operator.type }}">{{= it.translate("operators", operator.type) }}</option> \
-  {{~}} \
-  {{? optgroup !== null }}</optgroup>{{?}} \
-</select>';
+    {{ var optgroup = null; }} \
+    <md-select class="form-control {{? it.operators.length === 1 }}hide{{?}}" name="{{= it.rule.id }}_operator" aria-label="{{= it.rule.id }}_operator" ng-model="operatorSelect_{{= it.rule.id }}" placeholder="{{= it.settings.select_placeholder }}" flex>\
+        {{~ it.operators: operator}}\
+            {{? optgroup !== operator.optgroup }} \
+                {{? optgroup !== null }}\
+                    </optgroup>\
+                {{?}} \
+                {{? (optgroup = operator.optgroup) !== null }} \
+                    <optgroup label="{{= it.translate(it.settings.optgroups[optgroup]) }}"> \
+                {{?}} \
+            {{?}} \
+            <md-option value="{{=operator.type}}">{{= it.translate("operators", operator.type) }}</md-option>\
+        {{~}}\
+        {{? optgroup !== null }}</optgroup>{{?}} \
+    </md-select>\
+</md-input-container>\
+';
 
 /**
  * Returns group's HTML
